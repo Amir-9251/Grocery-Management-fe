@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* These variables are space-separated RGB values for Tailwind's rgb(var(--color-primary) / <alpha-value>) syntax */
+    --color-primary: 15 23 42;      /* Tailwind's blue-600 */
+    --color-secondary: 249 115 22;    /* Tailwind's green-500 */
+    --color-hover: 234 88 12; /* Tailwind's blue-700 */
+
+  }
+
+  /* Global scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+}
+
+@layer utilities {
+  input:-webkit-autofill {
+    background-color: var(--color-primary) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-primary) inset !important;
+    color: var(--color-text) !important;
+  }
+
+  input:-webkit-autofill::first-line {
+    color: var(--color-text) !important;
+  }
+}
