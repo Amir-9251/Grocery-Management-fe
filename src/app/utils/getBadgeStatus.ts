@@ -33,7 +33,6 @@ export function getInventoryStatus(
     if (quantity <= 0) {
         return { status: 'out-of-stock', label: 'Out of Stock' };
     }
-    console.log("expiryDateStr::", expiryDateStr, "quantity::", quantity);
 
     const days = getDaysUntilExpiry(expiryDateStr);
 

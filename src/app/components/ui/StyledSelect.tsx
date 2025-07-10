@@ -1,10 +1,11 @@
 import Select from "react-select";
-import type { StylesConfig, GroupBase, ControlProps, CSSObjectWithLabel } from "react-select";
+import type { StylesConfig, GroupBase, ControlProps, CSSObjectWithLabel, MenuListProps } from "react-select";
 
 interface Option {
     value: string;
     label: string;
 }
+
 interface SelectProps {
     options: Option[];
     onChange: (selectedOption: Option | null) => void;
@@ -12,16 +13,39 @@ interface SelectProps {
     value?: Option | null;
     id?: string;
     placeholder?: string;
+    CustomMenuList?: React.ComponentType<MenuListProps<Option, false, GroupBase<Option>>>;
+    AddCategoryComponent?: React.ComponentType<{ onClick: () => void }>;
+    onAddCategoryClick?: () => void;
 }
 
-const StyledSelect = ({ options, onChange, name, placeholder, value, id }: SelectProps) => {
+const StyledSelect = ({ options, onChange, name, placeholder, value, id, CustomMenuList, AddCategoryComponent, onAddCategoryClick }: SelectProps) => {
+    // Enhanced Menu List that includes the Add Category option if provided
+    const EnhancedMenuList = ({ children, ...props }: MenuListProps<Option, false, GroupBase<Option>>) => {
+        return (
+            <div {...props.innerProps}>
+                {children}
+                {AddCategoryComponent && (
+                    <AddCategoryComponent
+                        onClick={() => {
+                            if (onAddCategoryClick) {
+                                onAddCategoryClick();
+                            } else {
+                                console.log('Add category clicked from StyledSelect');
+                            }
+                        }}
+                    />
+                )}
+            </div>
+        );
+    };
+
     const styleSelectStyles: StylesConfig<Option, false> = {
         control: (base: CSSObjectWithLabel, state: ControlProps<Option, false, GroupBase<Option>>) => ({
             ...base,
             backgroundColor: 'rgb(248 250 252)', // bg-slate-50
             borderRadius: '0.5rem', // rounded-lg
-            borderColor: state.isFocused ? 'rgb(15, 23, 42)' : 'transparent', // focus:border-[15,23,42]
-            boxShadow: state.isFocused ? '0 0 0 1px rgb(15, 23, 42)' : 'none', // focus:outline-[15,23,42]
+            borderColor: state.isFocused ? 'rgb(249 115 22)' : 'transparent', // focus:border-[15,23,42]
+            boxShadow: state.isFocused ? '0 0 0 1.5px rgb(249 115 22)' : 'none', // focus:outline-[15,23,42]
             minHeight: 'auto',
             padding: '0',
             border: '1px solid transparent',
@@ -62,6 +86,7 @@ const StyledSelect = ({ options, onChange, name, placeholder, value, id }: Selec
                 onChange={onChange}
                 styles={styleSelectStyles}
                 value={value}
+                components={{ MenuList: CustomMenuList || EnhancedMenuList }}
                 placeholder={placeholder || "Select..."}
                 name={name}
                 id={id}

@@ -14,6 +14,7 @@ const Category = () => {
     const [categories, setCategories] = useState<CategoryFormData[]>([])
     const [newCategory, setNewCategory] = useState<CategoryFormData>({ name: '', status: true });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const [checked, setChecked] = useState('create');
     const [open, setOpen] = useState(false);
     const [deleteCategoryId, setDeleteCategoryId] = useState<string>('');
@@ -28,40 +29,51 @@ const Category = () => {
     ]
 
     const getCategories = async () => {
+        setLoading(true);
         try {
 
             const response = await GetCategoriesApi();
-            // console.log(response)
+            if (!response) return
+            // setLoading(false);
             setCategories(response);
         } catch (error) {
+            // setLoading(false);
             console.error('Error fetching categories:', error);
         }
     }
-    // console.log("newCategory", newCategory)
+
     const handleDeleteCategory = async () => {
+        setLoading(true);
         try {
             const response = await DeleteCategoryApi(deleteCategoryId);
             if (response) {
                 getCategories();
+                setLoading(false);
                 setConfirmOpen(false);
             } else {
                 console.error('Failed to delete category');
             }
         } catch (error) {
             console.error('Error deleting category:', error);
+            setLoading(false);
         }
     }
+    console.log("Loading categories:", loading);
     const handleAddCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+        setLoading(true);
         e.preventDefault();
+
         try {
             const response = await CreateCategoryApi(newCategory);
-            // console.log("response", response)
+
             if (response) {
                 getCategories();
                 setOpen(false);
+                setLoading(false);
                 setNewCategory({ name: '', status: true });
             }
         } catch (error) {
+            setLoading(false);
             if (error instanceof AxiosError) {
                 console.error('Error adding category:', error.response?.data?.message);
                 setError(error.response?.data?.message);
@@ -72,12 +84,13 @@ const Category = () => {
     }
     const handleEditCategory = (category: CategoryFormData) => {
         setNewCategory(category);
-        // console.log("category", category)
+
         setChecked('update');
         setOpen(true);
     }
 
     const handleUpdateCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+        setLoading(true);
         e.preventDefault();
         console.log("Updating category:", newCategory);
         if (!newCategory._id) {
@@ -92,10 +105,12 @@ const Category = () => {
             if (response) {
                 getCategories();
                 setOpen(false);
+                setLoading(false);
                 setNewCategory({ name: '', status: true });
             }
         } catch (error) {
             console.error('Error updating category:', error);
+            setLoading(false);
         }
     }
 
@@ -133,19 +148,30 @@ const Category = () => {
                     </Button>
                 </div>
 
-                {categories.length > 0 ? <CategoryTable
-                    columns={columns}
-                    data={categories}
-                    onDelete={handleDelete}
-                    onEdit={handleEditCategory}
-                /> :
-                    <div className="flex flex-col items-center justify-center h-64">
-                        <IconWrapper>
-                            <IconCategory size={32} color="#f97316" />
-                        </IconWrapper>
-                        <span className='text-slate-500'>No products available.</span>
-                        <span className='text-slate-500'>Add new items to manage your stock.</span>
-                    </div>
+                {loading ?
+
+                    <div role="status" className="w-full animate-pulse">
+                        <div className=" rounded-lg mb-1 flex flex-col">
+                            <div className="h-2 bg-gray-200 border-r-2 border-white"></div>
+                            <div className="h-2 bg-gray-200 border-r border-white"></div>
+                            <div className="h-2 bg-gray-200 border-r border-white"></div>
+                            <div className="h-2 bg-gray-200 border-r "></div>
+                        </div>
+                        <div className="h-2 bg-gray-200 rounded-lg  "></div>
+                        <span className="sr-only">Loading...</span>
+                    </div> : categories.length !== 0 ?
+                        <CategoryTable
+                            columns={columns}
+                            data={categories}
+                            onDelete={handleDelete}
+                            onEdit={handleEditCategory}
+                        /> : <div className="flex flex-col items-center justify-center h-64">
+                            <IconWrapper>
+                                <IconCategory size={32} color="#f97316" />
+                            </IconWrapper>
+                            <span className='text-slate-500'>No categories available.</span>
+                            <span className='text-slate-500'>Add new items to manage your stock.</span>
+                        </div>
                 }
 
             </div>

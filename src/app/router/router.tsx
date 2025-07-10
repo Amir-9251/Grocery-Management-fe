@@ -8,7 +8,7 @@ const RegistrationForm = lazy(() => import('../components/Auth/RegistrationForm'
 const DashBoard = lazy(() => import('../components/Pages/DashBoard/DashBoard'));
 const Products = lazy(() => import('../components/Pages/Products/Products'));
 const Category = lazy(() => import('../components/Pages/Category/Category'));
-const Sales = lazy(() => import('../components/Pages/Sales/Sales'));
+
 
 
 
@@ -32,10 +32,7 @@ const router = createBrowserRouter([
                 path: 'category',
                 element: <Category />
             },
-            {
-                path: 'sales',
-                element: <Sales />
-            }
+
         ]
     },
     {

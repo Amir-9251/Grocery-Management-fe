@@ -2,7 +2,7 @@ export interface StockEntryFormData {
     _id?: string;
     productName: string;
     code: string;
-    category?: { _id?: string; name: string, status: boolean }; // Adjusted to match the expected type
+    category?: { _id?: string; name: string, status?: boolean }; // Adjusted to match the expected type
     categoryId?: string; // Adjusted to match the expected type
     Unitprice: number;
     quantity: number;
@@ -28,4 +28,9 @@ export interface User {
 export interface BadgeProps {
     status: 'expired' | 'expires-today' | 'expiring-soon' | 'fresh';
     title: string;
+}
+
+export interface Option {
+    value: string;
+    label: string;
 }

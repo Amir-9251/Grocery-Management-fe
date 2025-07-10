@@ -27,7 +27,7 @@ export default function CategoryTable({ data, columns, onEdit, onDelete }: Table
             id: 'status',
             header: 'Status',
             cell: ({ row }: { row: Row<CategoryFormData> }) => (
-                <div className='flex gap-4 w-full justify-center'>
+                <div className='flex gap-4 w-full justify-start'>
                     {row.original.status ? (
                         <Badge status="fresh" title="active" />
                     ) : (
@@ -40,7 +40,7 @@ export default function CategoryTable({ data, columns, onEdit, onDelete }: Table
             id: 'actions',
             header: 'Actions',
             cell: ({ row }: { row: Row<CategoryFormData> }) => (
-                <div className='flex gap-2 w-full justify-end'>
+                <div className='flex gap-2 w-full justify-start'>
                     <button
                         className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-800 rounded-lg transition-all duration-200"
                         title="Edit"
@@ -70,7 +70,7 @@ export default function CategoryTable({ data, columns, onEdit, onDelete }: Table
         columns: enhancedColumns,
         getCoreRowModel: getCoreRowModel(),
     });
-    // console.log("Table Data:", data);
+
     return (
         <div className="max-h-96 overflow-y-auto rounded-lg [&::-webkit-scrollbar]:w-px [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-gray-600">
             <table className={styles.table} border={1} cellPadding={10} >

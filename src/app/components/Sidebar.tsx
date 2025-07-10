@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { IconShoppingCart, IconDashboard, IconCircles, IconCategory, IconBox } from "@tabler/icons-react"
+import { IconShoppingCart, IconDashboard, IconCategory, IconBox } from "@tabler/icons-react"
 
 
 const Sidebar = () => {
@@ -11,23 +11,18 @@ const Sidebar = () => {
             label: '/'
         },
         {
-            title: 'Products',
-            icon: <IconBox size={24} color={`${location.pathname === '/products' ? '#f97316' : 'currentColor'}`} />,
-            label: '/products'
-        },
-        {
             title: 'Category',
             icon: <IconCategory size={24} color={`${location.pathname === '/category' ? '#f97316' : 'currentColor'}`} />,
             label: '/category'
         },
         {
-            title: 'Sales',
-            icon: <IconCircles size={24} color={`${location.pathname === '/sales' ? '#f97316' : 'currentColor'}`} />,
-            label: '/sales'
-        }
+            title: 'Products',
+            icon: <IconBox size={24} color={`${location.pathname === '/products' ? '#f97316' : 'currentColor'}`} />,
+            label: '/products'
+        },
+
     ]
 
-    console.log('Current Path:', location.pathname);
     return (
         <div className="bg-slate-800 text-white w-80 px-2 shadow font">
             <div className="flex items-center justify-start px-4 py-4">

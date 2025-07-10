@@ -15,7 +15,7 @@ interface ModalProps {
     checked?: string;
     buttonText?: string;
     handleOpen?: (open: boolean) => void;
-    error: string;
+    error?: string;
 
 }
 
@@ -37,7 +37,7 @@ const CategoryModal = ({
         <Dialog.Root open={open} onOpenChange={handleOpen}>
             <Dialog.Portal>
                 <Dialog.Overlay className='fixed inset-0 bg-black/30 z-40 backdrop-blur-sm' />
-                <Dialog.Content className='fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl p-8 w-full max-w-md'>
+                <Dialog.Content className='fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl p-8 w-full max-w-md'>
                     <Dialog.Title className='text-xl font-bold mb-4'>Add Category</Dialog.Title>
                     <form onSubmit={checked === 'create' ? handleAddCategory : handleUpdateCategory} className='flex flex-col gap-4'>
                         <div>

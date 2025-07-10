@@ -9,8 +9,8 @@ import { IconDashboard } from "@tabler/icons-react"
 import { IconCalendarStats } from "@tabler/icons-react"
 
 const DashBoard = () => {
-    const { user, loading, error } = useProfile();
-    console.log("user", user, loading, error);
+    const { user } = useProfile();
+
     return (
         <div className="mt-8">
             <Header

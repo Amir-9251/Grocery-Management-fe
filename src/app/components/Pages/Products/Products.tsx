@@ -50,8 +50,8 @@ const Products = () => {
 
     const columns: columnsType[] = [
         {
-            header: 'Product Code',
-            accessorKey: 'code',
+            header: 'category',
+            accessorKey: 'category.name',
         },
         {
             header: 'Product Name',
@@ -72,9 +72,7 @@ const Products = () => {
     }
 
     const handleEditProduct = (product: StockEntryFormData) => {
-        console.log("product::", product)
         setUpdatedProduct(product);
-        // console.log("category", category)
         setChecked('update');
         setOpen(true);
     }
@@ -82,7 +80,6 @@ const Products = () => {
 
     const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("updatedProduct", updatedProduct)
         if (updatedProduct) {
 
             await createProduct(updatedProduct);
@@ -95,7 +92,6 @@ const Products = () => {
     }
     const handleUpdateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("updatedProduct", updatedProduct)
         if (updatedProduct && updatedProduct._id) {
             await updateProduct(updatedProduct._id, updatedProduct);
         }

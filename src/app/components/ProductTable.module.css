@@ -21,6 +21,7 @@ border: 1px solid #e5e9f2;
   font-weight: 600;
   color: #fff;
   font-size: 14px;
+  text-transform: uppercase;
   border-bottom: 1px solid #e5e9f2;
   text-align: left;
 }

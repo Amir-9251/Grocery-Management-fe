@@ -42,7 +42,7 @@ export default function ProductTable({ data, columns, onEdit, onDelete, onSelect
             id: 'actions',
             header: 'Actions',
             cell: ({ row }: { row: Row<StockEntryFormData> }) => (
-                <div className='flex gap-4 w-full justify-end'>
+                <div className='flex gap-4 w-full justify-start'>
                     <button
                         className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-800 rounded-lg transition-all duration-200"
                         title="Edit"
