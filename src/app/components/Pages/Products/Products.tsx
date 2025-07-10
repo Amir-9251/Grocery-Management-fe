@@ -11,7 +11,7 @@ import IconWrapper from "../../ui/IconWrapper";
 import Button from "../../ui/Button";
 import { IconPlus } from "@tabler/icons-react";
 import ProductDetailModal from "../../Models/ProductDetailModal";
-import Loader from "../../../animations/Loading";
+import TableSkeleton from "../../ui/TableSkeleton";
 const ProductModal = lazy(() => import("../../Models/ProductModal"));
 
 
@@ -148,17 +148,16 @@ const Products = () => {
 
 
 
-            {formattedProducts.length !== 0 ?
-                <ProductTable
-                    data={formattedProducts.reverse()}
-                    columns={columns}
-                    onDelete={handleDelete}
-                    onEdit={handleEditProduct}
-                    onSelect={setSelectedProduct}
-                /> :
-                loading ? <div className="flex items-center justify-center h-64">
-                    <Loader className='w-10 h-10  text-orange-600' />
-                </div>
+            {loading ?
+                <TableSkeleton columns={5} />
+                : formattedProducts.length !== 0 ?
+                    <ProductTable
+                        data={formattedProducts.reverse()}
+                        columns={columns}
+                        onDelete={handleDelete}
+                        onEdit={handleEditProduct}
+                        onSelect={setSelectedProduct}
+                    />
                     :
                     <div className="flex flex-col items-center justify-center h-64 ">
                         <IconWrapper>

@@ -4,6 +4,7 @@ const getToken = () => {
 
 const removeToken = () => {
     localStorage.removeItem('VITE_APP_TOKEN');
+    window.location.reload();
 }
 
 const setToken = (token: string) => {

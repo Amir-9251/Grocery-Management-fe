@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
-import { IconShoppingCart, IconDashboard, IconCategory, IconBox } from "@tabler/icons-react"
+import { IconShoppingCart, IconDashboard, IconCategory, IconBox, IconLogout } from "@tabler/icons-react"
+import { removeToken } from "../utils/AppToken";
 
 
 const Sidebar = () => {
@@ -24,7 +25,7 @@ const Sidebar = () => {
     ]
 
     return (
-        <div className="bg-slate-800 text-white w-80 px-2 shadow font">
+        <div className="bg-slate-800 text-white w-80 px-2 shadow h-screen flex flex-col">
             <div className="flex items-center justify-start px-4 py-4">
                 <IconShoppingCart size={40} color="#f97316" />
                 <div className="flex flex-col ml-3 text-lg font-sans font-bold">
@@ -33,17 +34,21 @@ const Sidebar = () => {
                 </div>
             </div>
 
-            {Items.map((item, index) => (
+            <div className="flex-1">
+                {Items.map((item, index) => (
+                    <Link key={index} to={item.label} className={`flex items-center gap-2 w-full  px-5 py-3 rounded-xl my-1 text-slate-300 text-sm hover:text-white  hover:bg-slate-700 transition-colors duration-200 ${location.pathname === item.label ? 'bg-slate-700 text-white' : ''}`} >
+                        {item.icon}
+                        <span>{item.title}</span>
+                    </Link>
+                ))}
+            </div>
 
-
-                <Link key={index} to={item.label} className={`flex items-center gap-2 w-full  px-5 py-3 rounded-xl my-1 text-slate-300 text-sm hover:text-white  hover:bg-slate-700 transition-colors duration-200 ${location.pathname === item.label ? 'bg-slate-700 text-white' : ''}`} >
-                    {item.icon}
-                    <span>{item.title}</span>
-                </Link>
-
-            ))}
-
-
+            <div className="pb-4">
+                <button className="flex items-center gap-2 w-full px-5 py-3 rounded-xl my-1 text-slate-300 text-sm hover:text-white hover:bg-slate-700 transition-colors duration-200 group" onClick={() => { removeToken() }}>
+                    <IconLogout size={24} className="text-slate-300 group-hover:text-orange-500 transition-colors duration-200" />
+                    <span className="text-base">Logout</span>
+                </button>
+            </div>
 
         </div>
     )
