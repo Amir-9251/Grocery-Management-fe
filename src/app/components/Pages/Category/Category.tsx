@@ -10,6 +10,7 @@ import { IconCategory } from '@tabler/icons-react'
 import IconWrapper from '../../ui/IconWrapper'
 import Button from '../../ui/Button'
 import { IconPlus } from '@tabler/icons-react'
+import TableSkeleton from '../../ui/TableSkeleton'
 const Category = () => {
     const [categories, setCategories] = useState<CategoryFormData[]>([])
     const [newCategory, setNewCategory] = useState<CategoryFormData>({ name: '', status: true });
@@ -34,10 +35,10 @@ const Category = () => {
 
             const response = await GetCategoriesApi();
             if (!response) return
-            // setLoading(false);
+            setLoading(false);
             setCategories(response);
         } catch (error) {
-            // setLoading(false);
+            setLoading(false);
             console.error('Error fetching categories:', error);
         }
     }
@@ -148,18 +149,10 @@ const Category = () => {
                     </Button>
                 </div>
 
-                {loading ?
-
-                    <div role="status" className="w-full animate-pulse">
-                        <div className=" rounded-lg mb-1 flex flex-col">
-                            <div className="h-2 bg-gray-200 border-r-2 border-white"></div>
-                            <div className="h-2 bg-gray-200 border-r border-white"></div>
-                            <div className="h-2 bg-gray-200 border-r border-white"></div>
-                            <div className="h-2 bg-gray-200 border-r "></div>
-                        </div>
-                        <div className="h-2 bg-gray-200 rounded-lg  "></div>
-                        <span className="sr-only">Loading...</span>
-                    </div> : categories.length !== 0 ?
+                {loading ? (
+                    <TableSkeleton columns={columns.length} />
+                )
+                    : categories.length !== 0 ?
                         <CategoryTable
                             columns={columns}
                             data={categories}

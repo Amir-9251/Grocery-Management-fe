@@ -73,7 +73,7 @@ export default function CategoryTable({ data, columns, onEdit, onDelete }: Table
 
     return (
         <div className="max-h-96 overflow-y-auto rounded-lg [&::-webkit-scrollbar]:w-px [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-none hover:[&::-webkit-scrollbar-thumb]:bg-gray-600">
-            <table className={styles.table} border={1} cellPadding={10} >
+            <table className={styles.table} border={1} cellPadding={10}>
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id} className={styles.headerRow}>

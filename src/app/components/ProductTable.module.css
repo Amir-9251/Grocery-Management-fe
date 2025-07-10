@@ -7,7 +7,7 @@
   max-height: 600px;
   overflow-y: auto;
   overflow: hidden;
-border: 1px solid #e5e9f2;
+/* border: 1px solid #e5e9f2; */
 
   /* box-shadow: 0 2px 8px rgba(0,0,0,0.06); */
 }
@@ -22,8 +22,14 @@ border: 1px solid #e5e9f2;
   color: #fff;
   font-size: 14px;
   text-transform: uppercase;
-  border-bottom: 1px solid #e5e9f2;
+  border-bottom: 0.5px solid #f8fafc;
   text-align: left;
+  border-right: 0.5px solid #64748b;
+}
+
+.headerCell:last-child {
+  border-right: none;
+
 }
 
 
