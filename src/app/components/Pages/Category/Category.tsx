@@ -150,7 +150,7 @@ const Category = () => {
                 </div>
 
                 {loading ? (
-                    <TableSkeleton columns={columns.length} />
+                    <TableSkeleton columns={3} />
                 )
                     : categories.length !== 0 ?
                         <CategoryTable
