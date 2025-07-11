@@ -32,6 +32,21 @@ export const GetProductsApi = async (page: number, pageSize: number) => {
     });
     return response.data;
 }
+
+export const searchProductsApi = async (query: string) => {
+    const baseUrl = `products/search`;
+    const token = getToken();
+    const response = await apiClient({
+        method: "GET",
+        url: baseUrl,
+        params: { search: query },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+}
+
 export const DeleteProductApi = async (productId: string) => {
     const baseUrl = `product/${productId}`;
     const token = getToken();

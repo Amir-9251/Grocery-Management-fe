@@ -29,8 +29,6 @@ const StyledSelect = ({ options, onChange, name, placeholder, value, id, CustomM
                         onClick={() => {
                             if (onAddCategoryClick) {
                                 onAddCategoryClick();
-                            } else {
-                                console.log('Add category clicked from StyledSelect');
                             }
                         }}
                     />

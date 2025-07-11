@@ -85,7 +85,6 @@ const ProductModal = ({
     }
 
     const handleAddCategoryClick = () => {
-        console.log('Add Category clicked');
         setCategoryModalOpen(true);
     };
 

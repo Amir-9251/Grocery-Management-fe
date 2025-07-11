@@ -26,14 +26,14 @@ const StyledSearch = ({ type, onChange, placeholder, name, className, value, id 
                 onChange={onChange}
                 className={`
                     mt-1 block w-full
-                    rounded-xl border-transparent
+                    rounded-3xl border-transparent
                     border
                     shadow-sm
                     text-[15PX]
                     placeholder:color-gray-400
                     placeholder:capitalize
                     bg-slate-50 border-gray-300
-                    pl-10 pr-4 py-3
+                    pl-10 pr-4 py-2
                     ${className}
                     focus:border-secondary focus:outline-none focus:bg-white`}
             />

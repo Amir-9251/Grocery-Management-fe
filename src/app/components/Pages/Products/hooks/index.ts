@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { StockEntryFormData } from "../../../../types/Types";
-import { CreateProductsApi, DeleteProductApi, GetProductByIdApi, GetProductsApi, UpdateProductApi } from "../api/product";
+import { CreateProductsApi, DeleteProductApi, GetProductByIdApi, GetProductsApi, searchProductsApi, UpdateProductApi } from "../api/product";
 
 export const useProducts = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +31,23 @@ export const useProducts = () => {
         } catch (err) {
             setError("Failed to fetch products");
             console.error("Error fetching products:", err);
+            setLoading(false);
+        }
+    }
+    const searchProducts = async (query: string) => {
+        setLoading(true);
+        try {
+            const response = await searchProductsApi(query);
+            if (response) {
+                setProducts(response);
+                setLoading(false);
+            } else {
+                setError("No products found");
+                setLoading(false);
+            }
+        } catch (err) {
+            setError("Failed to search products");
+            console.error("Error searching products:", err);
             setLoading(false);
         }
     }
@@ -138,6 +155,8 @@ export const useProducts = () => {
     return {
         setProducts, loading, error, products, product,
         getProductById, updateProduct, deleteProduct, createProduct
-        , getProducts, totalPages, loadMoreProducts, resetProducts, hasMore
+        , getProducts, totalPages, loadMoreProducts, resetProducts, hasMore,
+        searchProducts
+
     };
 }

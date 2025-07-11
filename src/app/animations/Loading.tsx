@@ -1,4 +1,3 @@
-import "../../App.css"
 interface LoaderProps {
     className?: string;
 }

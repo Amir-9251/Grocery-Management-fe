@@ -4,7 +4,7 @@ import type { StockEntryFormData } from '../../../types/Types';
 import ProductTable from "../../ProductTable";
 import { formatDate } from "../../../utils/FormateDate";
 import { useProducts } from "./hooks";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useEffect, useState, useRef } from "react";
 import ConfirmModal from "../../Models/ConfirmModal";
 import { IconBox } from "@tabler/icons-react";
 import IconWrapper from "../../ui/IconWrapper";
@@ -32,6 +32,7 @@ const Products = () => {
         getProducts,
         loadMoreProducts,
         resetProducts,
+        searchProducts,
         hasMore
     } = useProducts()
     const [open, setOpen] = useState(false);
@@ -39,6 +40,7 @@ const Products = () => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleteProductId, setDeleteProductId] = useState<string>('');
     const [pageSize] = useState(5);
+    const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [updatedProduct, setUpdatedProduct] = useState<StockEntryFormData>({
         code: '',
@@ -51,6 +53,8 @@ const Products = () => {
     });
 
     const [checked, setChecked] = useState('create');
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    console.log('Products Search Query:', searchQuery);
 
     const formattedProducts = products?.map((product: StockEntryFormData) => ({
         ...product,
@@ -98,27 +102,21 @@ const Products = () => {
         if (updatedProduct && updatedProduct._id) {
             await updateProduct(updatedProduct._id, updatedProduct);
         }
-        if (setOpen) {
-            setOpen(false);
-        }
-        if (setChecked) setChecked('create');
+        setOpen(false);
+        setChecked('create');
     }
 
     const handleOpen = (open: boolean) => {
-        if (setUpdatedProduct) {
-            setUpdatedProduct({
-                productName: '',
-                code: '',
-                Unitprice: 0,
-                supplier: '',
-                quantity: 0,
-                ExpiryDate: '',
-                category: { name: '', status: true }
-            });
-        }
-        if (setOpen) {
-            setOpen(open);
-        }
+        setUpdatedProduct({
+            productName: '',
+            code: '',
+            Unitprice: 0,
+            supplier: '',
+            quantity: 0,
+            ExpiryDate: '',
+            category: { name: '', status: true }
+        });
+        setOpen(open);
     }
 
     const handleDelete = (id: string) => {
@@ -139,6 +137,31 @@ const Products = () => {
         setCurrentPage(1);
     }, [pageSize]);
 
+    useEffect(() => {
+        // Clear the previous timeout
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        // Set a new timeout
+        searchTimeoutRef.current = setTimeout(() => {
+            if (searchQuery.trim() !== '') {
+                searchProducts(searchQuery);
+            }
+            else {
+                resetProducts();
+                getProducts(1, pageSize);
+            }
+        }, 500);
+
+        // Cleanup function to clear timeout on unmount
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+        };
+    }, [searchQuery]);
+
     return (
         <div className="mt-8">
             <Header title="Products">
@@ -154,7 +177,8 @@ const Products = () => {
                     placeholder="Search products..."
                     name="search"
                     type="text"
-                    value={''}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchQuery}
                 />
                 <Button
                     className='rounded-lg text-[13px]'
