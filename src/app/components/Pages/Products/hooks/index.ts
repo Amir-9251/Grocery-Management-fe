@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { StockEntryFormData } from "../../../../types/Types";
 import { CreateProductsApi, DeleteProductApi, GetProductByIdApi, GetProductsApi, UpdateProductApi } from "../api/product";
 
@@ -6,13 +6,23 @@ export const useProducts = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [products, setProducts] = useState<StockEntryFormData[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(0);
     const [product, setProduct] = useState<StockEntryFormData | null>(null);
-    const getProducts = async () => {
+    const [hasMore, setHasMore] = useState<boolean>(true);
+
+    const getProducts = async (page: number, pageSize: number, append: boolean = false) => {
         setLoading(true);
         try {
-            const response = await GetProductsApi();
+            const response = await GetProductsApi(page, pageSize);
+            console.log("Products fetched:", response);
             if (response) {
-                setProducts(response);
+                if (append) {
+                    setProducts(prev => [...prev, ...response.products]);
+                } else {
+                    setProducts(response.products);
+                }
+                setTotalPages(response.totalPages);
+                setHasMore(page < response.totalPages);
                 setLoading(false);
             } else {
                 setError("No products found");
@@ -24,12 +34,23 @@ export const useProducts = () => {
             setLoading(false);
         }
     }
+
+    const loadMoreProducts = async (page: number, pageSize: number) => {
+        if (!hasMore || loading) return;
+        await getProducts(page, pageSize, true);
+    }
+
+    const resetProducts = () => {
+        setProducts([]);
+        setHasMore(true);
+    }
+
     const getProductById = async (productId: string) => {
         setLoading(true);
         try {
             const response = await GetProductByIdApi(productId);
             if (response) {
-                setProduct(response);
+                setProduct(response); // Assuming 10 items per page
                 setLoading(false);
             } else {
                 setError("Product not found");
@@ -47,7 +68,8 @@ export const useProducts = () => {
         try {
             const response = await UpdateProductApi(productId, productData);
             if (response) {
-                getProducts();
+                resetProducts();
+                getProducts(1, 10); // Reset to first page after update
                 setLoading(false);
             }
             else {
@@ -66,7 +88,8 @@ export const useProducts = () => {
         try {
             const response = await DeleteProductApi(productId);
             if (response) {
-                getProducts();
+                resetProducts();
+                getProducts(1, 10);
                 setLoading(false);
             }
             else {
@@ -95,7 +118,8 @@ export const useProducts = () => {
                 });
 
             if (response) {
-                getProducts();
+                resetProducts();
+                getProducts(1, 10);
                 setLoading(false);
             }
             else {
@@ -110,11 +134,10 @@ export const useProducts = () => {
 
     }
 
-    useEffect(() => {
-        getProducts();
-    }, []);
+
     return {
         setProducts, loading, error, products, product,
         getProductById, updateProduct, deleteProduct, createProduct
+        , getProducts, totalPages, loadMoreProducts, resetProducts, hasMore
     };
 }

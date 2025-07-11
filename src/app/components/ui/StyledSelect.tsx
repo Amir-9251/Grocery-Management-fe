@@ -52,8 +52,8 @@ const StyledSelect = ({ options, onChange, name, placeholder, value, id, CustomM
             fontSize: '0.875rem', // text-sm
             paddingLeft: '1rem', // px-4
             paddingRight: '1rem',
-            paddingTop: '0.2rem', // py-3
-            paddingBottom: '0.2rem',
+            paddingTop: '0.3rem', // py-3
+            paddingBottom: '0.3rem',
             '&:hover': {
                 borderColor: 'transparent',
             },

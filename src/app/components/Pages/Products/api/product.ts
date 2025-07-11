@@ -16,12 +16,16 @@ export const CreateProductsApi = async (productData: StockEntryFormData) => {
     return response.data;
 }
 
-export const GetProductsApi = async () => {
+export const GetProductsApi = async (page: number, pageSize: number) => {
     const baseUrl = 'products';
     const token = getToken();
     const response = await apiClient({
         method: "GET",
         url: baseUrl,
+        params: {
+            page,
+            limit: pageSize, // Use pageSize for pagination
+        },
         headers: {
             Authorization: `Bearer ${token}`,
         },

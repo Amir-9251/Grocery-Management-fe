@@ -4,7 +4,7 @@ import type { StockEntryFormData } from '../../../types/Types';
 import ProductTable from "../../ProductTable";
 import { formatDate } from "../../../utils/FormateDate";
 import { useProducts } from "./hooks";
-import { lazy, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import ConfirmModal from "../../Models/ConfirmModal";
 import { IconBox } from "@tabler/icons-react";
 import IconWrapper from "../../ui/IconWrapper";
@@ -12,6 +12,7 @@ import Button from "../../ui/Button";
 import { IconPlus } from "@tabler/icons-react";
 import ProductDetailModal from "../../Models/ProductDetailModal";
 import TableSkeleton from "../../ui/TableSkeleton";
+import StyledSearch from "../../ui/StyledSearch";
 const ProductModal = lazy(() => import("../../Models/ProductModal"));
 
 
@@ -23,11 +24,22 @@ interface columnsType {
 
 const Products = () => {
 
-    const { products, deleteProduct, loading, createProduct, updateProduct } = useProducts()
+    const { products,
+        deleteProduct,
+        loading,
+        createProduct,
+        updateProduct,
+        getProducts,
+        loadMoreProducts,
+        resetProducts,
+        hasMore
+    } = useProducts()
     const [open, setOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<StockEntryFormData | null>(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleteProductId, setDeleteProductId] = useState<string>('');
+    const [pageSize] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
     const [updatedProduct, setUpdatedProduct] = useState<StockEntryFormData>({
         code: '',
         productName: '',
@@ -39,14 +51,11 @@ const Products = () => {
     });
 
     const [checked, setChecked] = useState('create');
-    // const [open, setOpen] = useState(false);
 
     const formattedProducts = products?.map((product: StockEntryFormData) => ({
         ...product,
         ExpiryDate: product.quantity > 0 && product.ExpiryDate ? formatDate(product.ExpiryDate) : "",
-    })) || [products];
-
-
+    })) || [];
 
     const columns: columnsType[] = [
         {
@@ -63,7 +72,14 @@ const Products = () => {
         },
     ];
 
-
+    const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (updatedProduct) {
+            await createProduct(updatedProduct);
+        }
+        setOpen(false);
+        setChecked('create');
+    }
 
     const handleDeleteProduct = async () => {
         if (!deleteProductId) return;
@@ -77,19 +93,6 @@ const Products = () => {
         setOpen(true);
     }
 
-
-    const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (updatedProduct) {
-
-            await createProduct(updatedProduct);
-        }
-
-        setOpen(false);
-
-        setChecked('create');
-
-    }
     const handleUpdateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (updatedProduct && updatedProduct._id) {
@@ -99,8 +102,8 @@ const Products = () => {
             setOpen(false);
         }
         if (setChecked) setChecked('create');
-
     }
+
     const handleOpen = (open: boolean) => {
         if (setUpdatedProduct) {
             setUpdatedProduct({
@@ -116,14 +119,25 @@ const Products = () => {
         if (setOpen) {
             setOpen(open);
         }
-
     }
+
     const handleDelete = (id: string) => {
         setDeleteProductId(id);
         setConfirmOpen(true);
     }
 
+    const handleLoadMore = () => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        loadMoreProducts(nextPage, pageSize);
+    }
 
+    useEffect(() => {
+        // Reset products and load first page
+        resetProducts();
+        getProducts(1, pageSize);
+        setCurrentPage(1);
+    }, [pageSize]);
 
     return (
         <div className="mt-8">
@@ -135,28 +149,33 @@ const Products = () => {
 
             <div className='flex justify-between pb-6 px-4 items-center'>
                 <p className=' text-slate-900 font-medium text-xl  rounded'>Products List</p>
-
+                <StyledSearch
+                    id="search"
+                    placeholder="Search products..."
+                    name="search"
+                    type="text"
+                    value={''}
+                />
                 <Button
                     className='rounded-lg text-[13px]'
                     onClick={() => handleOpen(true)}>
                     <IconPlus size={18} className="mr-1.5" color="#fff" />
                     Add Product
                 </Button>
-
-
             </div>
 
-
-
-            {loading ?
+            {loading && products.length === 0 ?
                 <TableSkeleton columns={5} />
                 : formattedProducts.length !== 0 ?
                     <ProductTable
-                        data={formattedProducts.reverse()}
+                        data={formattedProducts}
                         columns={columns}
                         onDelete={handleDelete}
                         onEdit={handleEditProduct}
                         onSelect={setSelectedProduct}
+                        onLoadMore={handleLoadMore}
+                        hasMore={hasMore}
+                        loading={loading}
                     />
                     :
                     <div className="flex flex-col items-center justify-center h-64 ">
@@ -195,8 +214,6 @@ const Products = () => {
                     ExpiryDate: '',
                     category: { name: '', status: true }
                 }} />
-
-
         </div>
     )
 }

@@ -25,7 +25,7 @@ const Sidebar = () => {
     ]
 
     return (
-        <div className="bg-slate-800 text-white w-80 px-2 shadow h-screen flex flex-col">
+        <div className="bg-slate-800 text-white w-80 px-2 shadow h-screen flex flex-col fixed">
             <div className="flex items-center justify-start px-4 py-4">
                 <IconShoppingCart size={40} color="#f97316" />
                 <div className="flex flex-col ml-3 text-lg font-sans font-bold">

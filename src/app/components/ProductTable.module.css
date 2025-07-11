@@ -4,9 +4,6 @@
   border-spacing: 0;
   background: #fff;
   border-radius: 12px;
-  max-height: 600px;
-  overflow-y: auto;
-  overflow: hidden;
 /* border: 1px solid #e5e9f2; */
 
   /* box-shadow: 0 2px 8px rgba(0,0,0,0.06); */
@@ -26,6 +23,9 @@
   text-align: left;
   border-right: 0.5px solid #64748b;
 }
+.headerCell:first-child {
+  padding-left: 24px;
+}
 
 .headerCell:last-child {
   border-right: none;
@@ -43,5 +43,8 @@
   padding: 12px 18px;
   border-bottom: 1px solid #f0f0f0;
   color: #444;
+}
+.bodyCell:first-child {
+  padding-left: 24px;
 }
 

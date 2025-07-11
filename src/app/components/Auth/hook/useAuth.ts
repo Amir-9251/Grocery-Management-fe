@@ -16,8 +16,8 @@ export const useAuth = () => {
             const response = await loginUser(data);
             if (response) {
                 setToken(response.token);
-                setLoading(false);
                 navigate('/'); // Redirect to home page after successful login
+                setLoading(false);
             }
 
         } catch (error) {
@@ -33,8 +33,8 @@ export const useAuth = () => {
             const response = await registerUser(data);
             if (response) {
                 setToken(response.token);
-                setLoading(false);
                 navigate('/'); // Redirect to home page after successful login
+                setLoading(false);
             }
 
         } catch (error) {
