@@ -98,8 +98,8 @@ const ProductModal = ({
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const categories = await GetCategoriesApi();
-            const categoryOptions: Option[] = categories
+            const categories = await GetCategoriesApi(1, 5);
+            const categoryOptions: Option[] = categories.categories
                 .filter((category: { name: string, status: boolean }) => category.status) // keep only active
                 .map((category: { name: string, _id: string }) => ({
                     _id: category._id,

@@ -1,12 +1,16 @@
 import apiClient from "../../../../services/apiClient";
 import { getToken } from "../../../../utils/AppToken";
 
-const GetCategoriesApi = async () => {
+const GetCategoriesApi = async (page: number, pageSize: number) => {
     const token = getToken()
     const baseUrl = 'categories';
     const response = await apiClient({
         method: "GET",
         url: baseUrl,
+        params: {
+            page,
+            limit: pageSize, // Use pageSize for pagination
+        },
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -60,4 +64,19 @@ const DeleteCategoryApi = async (id: string) => {
     return response.data;
 };
 
-export { GetCategoriesApi, CreateCategoryApi, UpdateCategoryApi, DeleteCategoryApi };
+const searchCategoriesApi = async (query: string) => {
+    const baseUrl = `categories/search`;
+    const token = getToken();
+    const response = await apiClient({
+        method: "GET",
+        url: baseUrl,
+        params: { search: query },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+}
+
+
+export { GetCategoriesApi, CreateCategoryApi, UpdateCategoryApi, DeleteCategoryApi, searchCategoriesApi };

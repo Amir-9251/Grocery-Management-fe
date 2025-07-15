@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Header from '../../ui/Header'
 import CategoryTable from './components/CategoryTable'
-import { CreateCategoryApi, DeleteCategoryApi, GetCategoriesApi, UpdateCategoryApi } from './api'
+import { CreateCategoryApi, DeleteCategoryApi, GetCategoriesApi, searchCategoriesApi, UpdateCategoryApi } from './api'
 import type { CategoryFormData } from '../../../types/Types'
 import CategoryModal from '../../Models/CategoryModal'
 import { AxiosError } from 'axios'
@@ -11,12 +11,18 @@ import IconWrapper from '../../ui/IconWrapper'
 import Button from '../../ui/Button'
 import { IconPlus } from '@tabler/icons-react'
 import TableSkeleton from '../../ui/TableSkeleton'
+import StyledSearch from '../../ui/StyledSearch'
 const Category = () => {
     const [categories, setCategories] = useState<CategoryFormData[]>([])
     const [newCategory, setNewCategory] = useState<CategoryFormData>({ name: '', status: true });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [pageSize] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
     const [checked, setChecked] = useState('create');
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [open, setOpen] = useState(false);
     const [deleteCategoryId, setDeleteCategoryId] = useState<string>('');
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -29,18 +35,30 @@ const Category = () => {
 
     ]
 
-    const getCategories = async () => {
+    const getCategories = async (page: number, pageSize: number, append: boolean = false) => {
         setLoading(true);
         try {
 
-            const response = await GetCategoriesApi();
-            if (!response) return
-            setLoading(false);
-            setCategories(response);
+            const response = await GetCategoriesApi(page, pageSize);
+
+            if (response.categories) {
+                if (append) {
+                    setCategories(prev => [...prev, ...response.categories]);
+                } else {
+                    setCategories(response.categories);
+                }
+                setHasMore(page < response.totalPages);
+                setLoading(false);
+            }
         } catch (error) {
             setLoading(false);
             console.error('Error fetching categories:', error);
         }
+    }
+
+    const loadMoreCategories = async (page: number, pageSize: number) => {
+        if (!hasMore || loading) return;
+        await getCategories(page, pageSize, true);
     }
 
     const handleDeleteCategory = async () => {
@@ -48,7 +66,7 @@ const Category = () => {
         try {
             const response = await DeleteCategoryApi(deleteCategoryId);
             if (response) {
-                getCategories();
+                getCategories(1, pageSize);
                 setLoading(false);
                 setConfirmOpen(false);
             } else {
@@ -68,7 +86,7 @@ const Category = () => {
             const response = await CreateCategoryApi(newCategory);
 
             if (response) {
-                getCategories();
+                getCategories(1, pageSize);
                 setOpen(false);
                 setLoading(false);
                 setNewCategory({ name: '', status: true });
@@ -104,7 +122,7 @@ const Category = () => {
                 status: newCategory.status
             });
             if (response) {
-                getCategories();
+                getCategories(1, pageSize);
                 setOpen(false);
                 setLoading(false);
                 setNewCategory({ name: '', status: true });
@@ -114,10 +132,15 @@ const Category = () => {
             setLoading(false);
         }
     }
+    const handleLoadMore = () => {
+        const nextPage = currentPage + 1;
+        setCurrentPage(nextPage);
+        loadMoreCategories(nextPage, pageSize);
+    }
 
     useEffect(() => {
-        getCategories();
-    }, [])
+        getCategories(1, pageSize);
+    }, [pageSize])
     const handleOpen = (open: boolean) => {
         setNewCategory({ name: '', status: true });
         setOpen(open);
@@ -130,6 +153,41 @@ const Category = () => {
         setConfirmOpen(true);
     }
 
+    const handleSearchChange = () => {
+        if (searchQuery.trim() !== '') {
+            searchCategoriesApi(searchQuery)
+                .then(response => {
+                    setCategories(response.categories);
+                    setHasMore(false); // Disable pagination during search
+                })
+                .catch(error => {
+                    console.error('Error searching categories:', error);
+                });
+        } else {
+            setCurrentPage(1);
+            getCategories(1, pageSize);
+        }
+    }
+
+    useEffect(() => {
+        // Clear the previous timeout
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+
+        // Set a new timeout
+        searchTimeoutRef.current = setTimeout(() => {
+            handleSearchChange();
+        }, 500);
+
+        // Cleanup function to clear timeout on unmount
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+        };
+    }, [searchQuery]);
+
 
     return (
         <div className='mt-8'>
@@ -141,6 +199,16 @@ const Category = () => {
             <div className='max-w-3xl ml-10  '>
                 <div className='flex justify-between pb-6 px-2 items-center'>
                     <p className=' text-slate-900 font-medium text-xl  rounded'>Add Category</p>
+
+                    <StyledSearch
+                        id="search"
+                        placeholder="Search category..."
+                        name="search"
+                        type="text"
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        value={searchQuery}
+                    />
+
                     <Button
                         className='rounded-lg text-[13px]'
                         onClick={() => handleOpen(true)}>
@@ -149,7 +217,7 @@ const Category = () => {
                     </Button>
                 </div>
 
-                {loading ? (
+                {loading && categories.length === 0 ? (
                     <TableSkeleton columns={3} />
                 )
                     : categories.length !== 0 ?
@@ -158,6 +226,9 @@ const Category = () => {
                             data={categories}
                             onDelete={handleDelete}
                             onEdit={handleEditCategory}
+                            onLoadMore={handleLoadMore}
+                            hasMore={hasMore}
+                            loading={loading}
                         /> : <div className="flex flex-col items-center justify-center h-64">
                             <IconWrapper>
                                 <IconCategory size={32} color="#f97316" />

@@ -130,12 +130,12 @@ const Products = () => {
         loadMoreProducts(nextPage, pageSize);
     }
 
-    useEffect(() => {
-        // Reset products and load first page
-        resetProducts();
-        getProducts(1, pageSize);
-        setCurrentPage(1);
-    }, [pageSize]);
+    // useEffect(() => {
+    //     // Reset products and load first page
+    //     resetProducts();
+    //     getProducts(1, pageSize);
+    //     setCurrentPage(1);
+    // }, [pageSize]);
 
     useEffect(() => {
         // Clear the previous timeout
@@ -146,6 +146,7 @@ const Products = () => {
         // Set a new timeout
         searchTimeoutRef.current = setTimeout(() => {
             if (searchQuery.trim() !== '') {
+                if (formattedProducts.length === 0) return
                 searchProducts(searchQuery);
             }
             else {
