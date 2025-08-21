@@ -171,7 +171,7 @@ const Products = () => {
                 </IconWrapper>
             </Header>
 
-            <div className='flex justify-between pb-6 px-4 items-center'>
+            <div className='flex justify-between pb-6 px-4 items-center mt-6'>
                 <p className=' text-slate-900 font-medium text-xl  rounded'>Products List</p>
                 <StyledSearch
                     id="search"

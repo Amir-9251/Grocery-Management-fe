@@ -183,7 +183,7 @@ export default function ProductTable({
                     ref={observerRef}
                     className="flex items-center justify-center py-4 bg-gray-50 transition-all duration-300"
                 >
-                    {loading ? (
+                    {loading && data.length === 0 ? (
                         <div className="animate-fadeIn w-full">
                             <TableSkeleton columns={5} rows={3} isShowHeader={false} />
                         </div>

@@ -44,6 +44,7 @@ export const searchProductsApi = async (query: string) => {
             Authorization: `Bearer ${token}`,
         },
     });
+    console.log("Search products response:", response.data);
     return response.data;
 }
 

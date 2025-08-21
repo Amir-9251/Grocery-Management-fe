@@ -10,7 +10,7 @@ interface HeaderProps {
 const Header = ({ title, username, userEmail, children }: HeaderProps) => {
     const location = useLocation();
     return (
-        <div className="flex items-center justify-between px-8 py-6 bg-white mb-6 border-b border-slate-100 ">
+        <div className="flex items-center justify-between px-8 rounded-xl py-6 bg-white shadow-sm  ">
             <div className="flex items-center gap-4">
                 {children}
                 <h1 className="text-slate-900 text-3xl font-medium">{title}</h1>

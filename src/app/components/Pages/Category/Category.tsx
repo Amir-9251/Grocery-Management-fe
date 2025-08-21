@@ -196,7 +196,7 @@ const Category = () => {
                     <IconCategory size={32} color="#f97316" />
                 </IconWrapper>
             </Header>
-            <div className='max-w-3xl ml-10  '>
+            <div className='max-w-3xl ml-10 mt-6 '>
                 <div className='flex justify-between pb-6 px-2 items-center'>
                     <p className=' text-slate-900 font-medium text-xl  rounded'>Add Category</p>
 

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { IconShoppingCart, IconDashboard, IconCategory, IconBox, IconLogout } from "@tabler/icons-react"
+import { IconShoppingCart, IconDashboard, IconCategory, IconBox, IconLogout, IconCash } from "@tabler/icons-react"
 import { removeToken } from "../utils/AppToken";
 
 
@@ -20,6 +20,11 @@ const Sidebar = () => {
             title: 'Products',
             icon: <IconBox size={24} color={`${location.pathname === '/products' ? '#f97316' : 'currentColor'}`} />,
             label: '/products'
+        },
+        {
+            title: 'Sell Products',
+            icon: <IconCash size={24} color={`${location.pathname === '/sell' ? '#f97316' : 'currentColor'}`} />,
+            label: '/sell'
         },
 
     ]

@@ -1,5 +1,5 @@
-import apiClient from "../../../../services/apiClient";
-import { getToken } from "../../../../utils/AppToken";
+import apiClient from "@/app/services/apiClient";
+import { getToken } from "@/app/utils/AppToken";
 
 const GetCategoriesApi = async (page: number, pageSize: number) => {
     const token = getToken()

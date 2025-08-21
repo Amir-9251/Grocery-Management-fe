@@ -8,6 +8,7 @@ const RegistrationForm = lazy(() => import('../components/Auth/RegistrationForm'
 const DashBoard = lazy(() => import('../components/Pages/DashBoard/DashBoard'));
 const Products = lazy(() => import('../components/Pages/Products/Products'));
 const Category = lazy(() => import('../components/Pages/Category/Category'));
+const SellPage = lazy(() => import('../components/Pages/Sell/SellPage'));
 
 
 
@@ -18,7 +19,9 @@ const router = createBrowserRouter([
         element:
             <RequireAuth>
                 <LayoutPage />
-            </RequireAuth>,
+            </RequireAuth>
+        ,
+
         children: [
             {
                 path: '/',
@@ -31,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: 'category',
                 element: <Category />
+            },
+            {
+                path: 'sell',
+                element: <SellPage />
             },
 
         ]
